@@ -1,0 +1,204 @@
+{% extends 'yuapp/index.html' %}
+
+{% block title %}首页{% endblock %}
+
+{% block content %}
+    <div class="container-fluid" style="text-align: center">
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <h4>
+                    Class
+                    <a href="{% url 'create' %}" class="btn btn-info">Create Class</a>
+                </h4>
+                <table class="table table-striped">
+                    <thead class="thead-dark">
+                    <tr>
+                      <th scope="col">课程名称</th>
+                      <th scope="col">开课学期</th>
+                      <th scope="col">课程编号</th>
+                      <th scope="col">成绩</th>
+                      <th scope="col">学分</th>
+                      <th scope="col">总学时</th>
+                      <th scope="col">绩点</th>
+                      <th scope="col">课程属性</th>
+                      <th scope="col">Update</th>
+                      <th scope="col">Delete</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for j in classer %}
+                        <tr>
+                          <td>{{j.coursename}}</td>
+                          <td>{{ j.starttime }}</td>
+                          <td>{{ j.cursenumber }}</td>
+                          <td>{{j.grade}}</td>
+                          <td>{{j.xuefen}}</td>
+                          <td>{{ j.zongxueshi }}</td>
+                          <td>{{ j.jidian }}</td>
+                          <td>{{ j.kecehngshuxing }}</td>
+                          <td>
+                              <a href="{% url 'updateclasser' j.id %}" class="btn btn-sm btn-warning">update</a>
+                          </td>
+                          <td>
+{#                              <a href="{% url 'deleteclasser' i.id %}" class="btn btn-sm btn-danger">remove</a>#}
+                                <button type="button" id="{{ j.id }}-del" class="btn btn-sm btn-danger">remove</button>
+                          </td>
+                        </tr>
+                    {% endfor %}
+                  </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+{#<img src="/static/img/zhaopian.png" width="5%" style="position:absolute;left:450px;top:0px;">#}
+
+
+{#<div id="main1" style="width: 1500px;height: 2000px;"></div>#}
+{#<script type="text/javascript">#}
+{#    var myChart = echarts.init(document.getElementById('main1'));#}
+{#var option = {#}
+{#    title: {#}
+{#        text: '成绩',#}
+{#        subtext: '成绩',#}
+{#        left: 'center'#}
+{#    },#}
+{#    tooltip: {#}
+{#        trigger: 'item',#}
+{#        formatter: '{a} <br/>{b} : {c} ({d}%)'#}
+{#    },#}
+{#    series: [#}
+{#        {#}
+{#            name: '',#}
+{#            type: 'pie',#}
+{#            radius: '55%',#}
+{#            center: ['50%', '60%'],#}
+{#            data: [#}
+{#                {% for j in classer %}#}
+{#                    {value: {{j.grade}}, name: '{{j.coursename}}'},#}
+{#                {% endfor %}#}
+{#            ],#}
+{#            emphasis: {#}
+{#                itemStyle: {#}
+{#                    shadowBlur: 10,#}
+{#                    shadowOffsetX: 0,#}
+{#                    shadowColor: 'rgba(0, 0, 0, 0.5)'#}
+{#                }#}
+{#            }#}
+{#        }#}
+{#    ]#}
+{#};#}
+{#    myChart.setOption(option);#}
+{#</script>#}
+
+
+<div id="main" style="width: 1500px;height: 2000px;"></div>
+<script type="text/javascript">
+    var myChart = echarts.init(document.getElementById('main'));
+    var option = {
+        title: {
+            text: '成绩统计图',
+            subtext: ''
+        },
+
+        legend: {
+            data: ['成绩']
+        },
+
+        grid: {
+            left: '3%',
+            right: '4%',
+            bottom: '3%',
+            containLabel: true
+        },
+
+        xAxis: {
+            type: 'value',
+            boundaryGap: [0,0]
+        },
+        yAxis: {
+            type: 'category',
+            data: [
+                {% for j in classer %}
+                  "{{ j.coursename }}",
+                {% endfor %}
+            ]
+        },
+        series: [
+            {
+                name: '成绩',
+                type: 'bar',
+                data: [
+                    {% for j in classer %}
+                      {{ j.grade }},
+                    {% endfor %}
+                ],
+                itemStyle: {
+                    normal: {
+        　　　　　　　　//这里是重点
+                        color: function(params) {
+                            //注意，如果颜色太少的话，后面颜色不会自动循环，最好多定义几个颜色
+                            var colorList = ['#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83', '#ca8622',
+                                            '#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83', '#ca8622',
+                                            '#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83', '#ca8622',
+                                            '#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83', '#ca8622',
+                                            '#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83', '#ca8622',
+                                            '#c23531','#2f4554', '#61a0a8', '#d48265', '#91c7ae','#749f83', '#ca8622',
+                                            ];
+                            var index;
+                            //给大于颜色数量的柱体添加循环颜色的判断
+                            if (params.dataIndex >= colorList.length) {
+                               index = params.dataIndex - colorList.length;
+                               return colorList[index];
+                            }
+                            return colorList[params.dataIndex]
+                        }
+                    }
+                }
+            }
+        ]
+    };
+
+
+    myChart.setOption(option);
+</script>
+
+
+
+{% endblock %}
+
+
+{% block javascript %}
+
+    <script>
+        {% for j in classer %}
+            $(document).ready(function () {
+                $('#{{ j.id }}-del').click(function () {
+                    var r=confirm("你确定要删除这行成绩单吗?")
+                    if(r){
+                        $.ajaxSetup({
+                            data:{
+                                csrfmiddlewaretoken:'{{ csrf_token }}'
+                            }
+                        })
+                        $.ajax({
+                            type:'POST',
+                            url:"{% url 'homepage' %}",
+                            data:{
+                                'classer_del':{{ j.id }}
+                            },
+                            dataTable:'text',
+                            success:function () {
+                                window.location.reload()
+                            },
+                            error:function () {
+                                console.log("Somewhere is wrong!")
+                            }
+                        })
+                    }
+                })
+            })
+        {% endfor %}
+    </script>
+
+{% endblock %}

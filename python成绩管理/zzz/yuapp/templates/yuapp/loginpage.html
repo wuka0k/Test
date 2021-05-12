@@ -1,0 +1,114 @@
+{% extends 'yuapp/index.html' %}
+
+{% block title %}登录{% endblock %}
+
+{% block content %}
+
+
+
+
+{##}
+{##}
+{#<div style="position:absolute;left:530px;top:0px;">#}
+{#  <video id="video" width="480" height="320" controls>#}
+{#  </video>#}
+{#  <canvas id="canvas" width="480" height="320"></canvas>#}
+{#</div>#}
+{##}
+{#  <script>#}
+{#    //访问用户媒体设备的兼容方法#}
+{#    function getUserMedia(constraints, success, error) {#}
+{#      if (navigator.mediaDevices.getUserMedia) {#}
+{#        //最新的标准API#}
+{#        navigator.mediaDevices.getUserMedia(constraints).then(success).catch(error);#}
+{#      } else if (navigator.webkitGetUserMedia) {#}
+{#        //webkit核心浏览器#}
+{#        navigator.webkitGetUserMedia(constraints,success, error)#}
+{#      } else if (navigator.mozGetUserMedia) {#}
+{#        //firfox浏览器#}
+{#        navigator.mozGetUserMedia(constraints, success, error);#}
+{#      } else if (navigator.getUserMedia) {#}
+{#        //旧版API#}
+{#        navigator.getUserMedia(constraints, success, error);#}
+{#      }#}
+{#    }#}
+{##}
+{#    let video = document.getElementById('video');#}
+{#    let canvas = document.getElementById('canvas');#}
+{#    let context = canvas.getContext('2d');#}
+{##}
+{#    function success(stream) {#}
+{#      //兼容webkit核心浏览器#}
+{#      let CompatibleURL = window.URL || window.webkitURL;#}
+{#      //将视频流设置为video元素的源#}
+{#      console.log(stream);#}
+{##}
+{#      //video.src = CompatibleURL.createObjectURL(stream);#}
+{#      video.srcObject = stream;#}
+{#      video.play();#}
+{#    }#}
+{##}
+{#    function error(error) {#}
+{#      console.log(`访问用户媒体设备失败${error.name}, ${error.message}`);#}
+{#    }#}
+{##}
+{#    if (navigator.mediaDevices.getUserMedia || navigator.getUserMedia || navigator.webkitGetUserMedia || navigator.mozGetUserMedia) {#}
+{#      //调用用户媒体设备, 访问摄像头#}
+{#      getUserMedia({video : {width: 480, height: 320}}, success, error);#}
+{#    } else {#}
+{#      alert('不支持访问用户媒体');#}
+{#    }#}
+{#  </script>#}
+
+    <div style="text-align: center">
+        {% for k in last_one %}
+            <img src="{{ k.img.url }}" width=15% height="50%" style="max-width: 250px; max-height: 250px;">
+        {% endfor %}
+    </div>
+
+    <div style="position:relative; text-align: center">
+        <form method="POST" enctype="multipart/form-data" style="color: black">
+            {% csrf_token %}
+            <input type="file" name="img">
+            <button type="submit" name="shangchuan" value="shangchuan">上传</button>
+        </form>
+    </div>
+
+
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4"></div>
+            <div class="col-md-4">
+                <div style="height: 50px"></div>
+                <div class="card shadow">
+                    <div class="card-header text-center bg-dark">
+                        <h4 class="text-light card-title">登录</h4>
+                    </div>
+                    <div class="card-body">
+                        {% if message %}
+                            <div class="alert alert-warning" role="alert">
+                                {{ message }}
+                            </div>
+                        {% endif %}
+                        <form action="{% url 'login' %}" method="post">
+                            {% csrf_token %}
+                            <label for="#user">用户名：</label>
+                            <input type="text" id="user" class="form-control" name="username" placeholder="username" required>
+                            <label for="#user">密码：</label>
+                            <input type="password" id="pwd" class="form-control" name="password" placeholder="password" required>
+                            <div class="text-center">
+                                <button type="submit" name="denglu" value="denglu" class="btn btn-primary">登录</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4"></div>
+        </div>
+    </div>
+
+
+
+
+
+{% endblock %}
